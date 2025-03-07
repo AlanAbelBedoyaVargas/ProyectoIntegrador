@@ -1,5 +1,6 @@
 const express = require('express');
 const usuarioRoutes = require('./routes/usuario');
+const planRoutes = require('./routes/plan');
 
 const app = express();
 
@@ -8,6 +9,7 @@ app.use(express.json());
 
 // Configurar rutas
 app.use('/api', usuarioRoutes);
+app.use('/api', planRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {
