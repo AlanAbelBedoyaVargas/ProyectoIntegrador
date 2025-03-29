@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const bcrypt = require('bcryptjs');
 module.exports = (sequelize, DataTypes) => {
   class Usuario extends Model {
     /**
@@ -11,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+    }
+    // Método para comparar contraseñas
+    validarPassword(password) {
+      if (!this.password) return false;
+      return bcrypt.compareSync(password, this.password);
     }
   }
   Usuario.init({
@@ -24,6 +30,12 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Usuario',
     tableName: 'usuarios',
+    hooks: {
+      beforeCreate: async (usuario) => {
+        const salt = await bcrypt.genSalt(10);
+        usuario.password = await bcrypt.hash(usuario.password, salt);
+      }
+    }
   });
   return Usuario;
 };
