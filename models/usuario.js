@@ -12,6 +12,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Usuario.hasOne(models.Nutricionista, {
+        foreignKey: 'id_usuario',
+        as: 'usuario_nutricionista',
+      });
+      Usuario.hasOne(models.Paciente, {
+        foreignKey: 'id_usuario',
+        as: 'usuario_paciente',
+      });
     }
     // Método para comparar contraseñas
     validarPassword(password) {
@@ -20,12 +28,39 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Usuario.init({
-    nombre: DataTypes.STRING,
-    apellido: DataTypes.STRING,
-    email: DataTypes.STRING,
-    username: DataTypes.STRING,
-    password: DataTypes.STRING,
-    rol: DataTypes.STRING(50)
+    uuid: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull:false,
+    },
+    apellido: {
+      type: DataTypes.STRING,
+      allowNull:false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    username: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    rol: {
+      type: DataTypes.ENUM('paciente', 'nutricionista'),
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Usuario',
