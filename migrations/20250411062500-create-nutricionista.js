@@ -14,6 +14,16 @@ module.exports = {
         defaultValue: Sequelize.literal( 'uuid_generate_v4()' ),     
         allowNull: false
       },
+      id_usuario: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'usuarios',
+            schema: 'public'
+          },
+          key: "id",
+        },
+      },
       numero_licencia: {
         type: Sequelize.STRING
       },

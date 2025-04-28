@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'id_actividad',
         as: 'paciente_actividad',
       });
+      Paciente.hasMany(models.Plan, {
+        foreignKey: 'id_actividad',
+        as: 'paciente_plan',
+      });
      
     }
   }
@@ -26,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     uuid: DataTypes.UUID,
     id_usuario: DataTypes.INTEGER,
     fecha_nacimiento: DataTypes.DATE,
-    genero: DataTypes.ENUM('masculino', 'femenino', 'otro'),
+    genero: DataTypes.ENUM('masculino', 'femenino'),
     peso_kg: DataTypes.DECIMAL(5,2),
     altura_cm: DataTypes.DECIMAL(5,2),
     objetivo: DataTypes.STRING,
