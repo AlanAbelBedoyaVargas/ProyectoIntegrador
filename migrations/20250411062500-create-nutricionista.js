@@ -23,9 +23,11 @@ module.exports = {
           },
           key: "id",
         },
+        allowNull: false
       },
       numero_licencia: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       especializacion: {
         type: Sequelize.STRING

@@ -28,18 +28,39 @@ module.exports = (sequelize, DataTypes) => {
   }
   Paciente.init({
     uuid: DataTypes.UUID,
-    id_usuario: DataTypes.INTEGER,
-    fecha_nacimiento: DataTypes.DATE,
-    genero: DataTypes.ENUM('masculino', 'femenino'),
-    peso_kg: DataTypes.DECIMAL(5,2),
-    altura_cm: DataTypes.DECIMAL(5,2),
-    objetivo: DataTypes.STRING,
+    id_usuario: {
+      type: DataTypes.INTEGER,
+      allowNull:false,
+    },
+    fecha_nacimiento: {
+      type: DataTypes.DATE,
+      allowNull:false,
+    },
+    sexo: {
+      type: DataTypes.ENUM('masculino', 'femenino'),
+      allowNull:false,
+    },
+    peso_kg: {
+      type: DataTypes.DECIMAL(5,2),
+      allowNull:false,
+    },
+    altura_cm: {
+      type: DataTypes.DECIMAL(5,2),
+      allowNull:false,
+    },
+    objetivo: {
+      type: DataTypes.STRING,
+      allowNull:false,
+    },
     //Considerar tablas aparte
     restricciones_alimentarias: DataTypes.STRING,
     condicion_medica: DataTypes.STRING, 
     alergias: DataTypes.STRING,
     intolerancias: DataTypes.STRING,
-    id_actividad: DataTypes.INTEGER,
+    id_actividad: {
+      type: DataTypes.INTEGER,
+      allowNull:false,
+    }
 
   }, {
     sequelize,

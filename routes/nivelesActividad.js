@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const {
     createNivel,
-    getNiveles,
+    getAllNiveles,
     getNivelById,
     updateNivel,
     deleteNivel
-} = require('../controllers/niveles.controller');
+} = require('../controllers/niveles_actividad.controller');
 
 
-router.get('/', getNiveles);
+router.get('/', getAllNiveles);
 router.get('/:uuid', getNivelById);
 router.post('/', createNivel);
 router.put('/:uuid', updateNivel);

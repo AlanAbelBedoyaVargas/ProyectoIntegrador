@@ -23,8 +23,14 @@ module.exports = (sequelize, DataTypes) => {
   }
   Nutricionista.init({
     uuid: DataTypes.UUID,
-    id_usuario: DataTypes.INTEGER,
-    numero_licencia: DataTypes.STRING,
+    id_usuario: {
+      type: DataTypes.INTEGER,
+      allowNull:false,
+    },
+    numero_licencia: {
+      type: DataTypes.STRING,
+      allowNull:false,
+    },
     especializacion: DataTypes.STRING,
     anios_experiencia: DataTypes.INTEGER,
     biografia: DataTypes.TEXT,

@@ -12,7 +12,7 @@ const createUser = async (req, res) => {
     const usuario = await Usuario.create({ nombre, apellido, email, username, password, rol });
     res.status(201).json(usuario);
   } catch (err) {
-    res.status(500).json({ error: 'No se pudo crear el usuario', details: err.message });
+    res.status(500).json({ error: 'No se pudo crear el usuario', err});
   }
 };
 

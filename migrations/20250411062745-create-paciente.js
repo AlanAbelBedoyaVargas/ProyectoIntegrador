@@ -23,22 +23,27 @@ module.exports = {
           },
           key: "id",
         },
+        allowNull: false
       },
       fechaNacimiento: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false,
       },
-      genero: {
+      sexo: {
         type: Sequelize.ENUM('masculino', 'femenino'),
         allowNull: false
       },
       peso_kg: {
-        type: Sequelize.DECIMAL(5, 2)
+        type: Sequelize.DECIMAL(5, 2),
+        allowNull: false,
       },
       altura_cm: {
-        type: Sequelize.DECIMAL(5, 2)
+        type: Sequelize.DECIMAL(5, 2),
+        allowNull: false,
       },
       objetivo: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       //Considerar tablas aparte
       restricciones_alimentarias: {
@@ -63,6 +68,7 @@ module.exports = {
           },
           key: "id",
         },
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
   Usuario.init({
     uuid: {
       type: DataTypes.UUID,
-      allowNull: false
+      //allowNull:false, No hace falta
     },
     nombre: {
       type: DataTypes.STRING,
@@ -43,14 +43,14 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      //unique: true, No hace falta, la base de datos ya lo maneja
       validate: {
         isEmail: true,
       },
     },
     username: {
       type: DataTypes.STRING,
-      unique: true,
+      //unique: true, No hace falta, la base de datos ya lo maneja
       allowNull: true,
     },
     password: {
