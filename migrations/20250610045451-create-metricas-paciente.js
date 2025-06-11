@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('usuarios', {
+    await queryInterface.createTable('metricas_pacientes', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,31 +14,36 @@ module.exports = {
         defaultValue: Sequelize.literal( 'uuid_generate_v4()' ),     
         allowNull: false
       },
-      nombre: {
-        type: Sequelize.STRING,
+      id_paciente:{
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'pacientes',
+            schema: 'public'
+          },
+          key: "id",
+        },
         allowNull: false
       },
-      apellido: {
-        type: Sequelize.STRING,
+      fecha: {
+        type: Sequelize.DATEONLY,
         allowNull: false
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+      peso_kg: {
+        type: Sequelize.DECIMAL(5,2),
+        allowNull: true
       },
-      username: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+      cintura_cm: {
+        type: Sequelize.DECIMAL(5,2),
+        allowNull: true
       },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false
+      cadera_cm: {
+        type: Sequelize.DECIMAL(5,2),
+        allowNull: true
       },
-      rol: {
-        type: Sequelize.ENUM('paciente', 'nutricionista'),
-        allowNull: false
+      porcentaje_graso: {
+        type: Sequelize.DECIMAL(5,2),
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
@@ -51,6 +56,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('usuarios');
+    await queryInterface.dropTable('metricas_pacientes');
   }
 };

@@ -17,10 +17,12 @@ module.exports = {
       },
       titulo: {
         type: Sequelize.STRING,
+        allowNull: true
       },
       tipo_plan: {
-        type: Sequelize.ENUM('original', 'alternativo', 'ajuste'),
-        allowNull: false
+        type: Sequelize.ENUM('original', 'alternativo'),
+        allowNull: false,
+        defaultValue: 'original'
       },
       descripcion: {
         type: Sequelize.TEXT,
@@ -35,6 +37,7 @@ module.exports = {
           },
           key: "id",
         },
+        allowNull: false
       },
       id_nutricionista: {
         type: Sequelize.INTEGER,
@@ -45,18 +48,19 @@ module.exports = {
           },
           key: "id",
         },
+        allowNull: false
       },
       fecha_inicio: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY,
+        allowNull: true
       },
       fecha_fin: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY,
+        allowNull: true
       },
       calorias_diarias: {
-        type: Sequelize.INTEGER
-      },
-      detalles: {
-        type: Sequelize.TEXT
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       id_plan_base: {
         type: Sequelize.INTEGER,
@@ -67,6 +71,7 @@ module.exports = {
           },
           key: "id",
         },
+        allowNull: true
       },
       generado_ia: {
         type: Sequelize.BOOLEAN,

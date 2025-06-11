@@ -19,7 +19,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'id_nutricionista',
         as: 'plan_nutricionista',
       });
-
+      Plan.hasMany(models.Comidas_plan, {
+        foreignKey: 'id_plan',
+        as: 'plan_comidasplan',
+      });
+      
       //Autoreferencia a la misma tabla
       Plan.belongsTo(models.Plan, {
         foreignKey: 'id_plan_base',
@@ -30,22 +34,56 @@ module.exports = (sequelize, DataTypes) => {
         as: 'derivado',
       });
       
+      
     }
   }
   Plan.init({
     uuid: DataTypes.UUID,
-    titulo: DataTypes.STRING,
-    tipo_plan: DataTypes.ENUM('original', 'alternativo', 'ajuste'),
-    descripcion: DataTypes.STRING,
-    id_paciente: DataTypes.INTEGER,
-    id_nutricionista: DataTypes.INTEGER,
-    fecha_inicio: DataTypes.DATE,
-    fecha_fin: DataTypes.DATE,
-    calorias_diarias: DataTypes.INTEGER,
-    detalles: DataTypes.TEXT,
-    id_plan_base: DataTypes.INTEGER,
-    generado_ia: DataTypes.BOOLEAN,
-    activo: DataTypes.BOOLEAN,
+    titulo: {
+      type: DataTypes.STRING,
+      allowNull:true,
+    },
+    tipo_plan: {
+      type: DataTypes.ENUM('original', 'alternativo'),
+      allowNull: false,
+      defaultValue: 'original',
+    },
+    descripcion: {
+      type: DataTypes.TEXT,
+      allowNull:true,
+    },
+    id_paciente: {
+      type: DataTypes.INTEGER,
+      allowNull:false,
+    },
+    id_nutricionista: {
+      type: DataTypes.INTEGER,
+      allowNull:false,
+    },
+    fecha_inicio: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    fecha_fin: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    calorias_diarias: {
+      type: DataTypes.INTEGER,
+      allowNull:false,
+    },
+    id_plan_base: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    generado_ia: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   }, {
     sequelize,
     modelName: 'Plan',

@@ -2,47 +2,53 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('nutricionistas', {
+    await queryInterface.createTable('alimentos_registrados', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      uuid: {
-        type: Sequelize.UUID,        
-        defaultValue: Sequelize.literal( 'uuid_generate_v4()' ),     
-        allowNull: false
-      },
-      id_usuario: {
+      id_registro_comida: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'usuarios',
+            tableName: 'registro_comidas',
             schema: 'public'
           },
           key: "id",
         },
         allowNull: false
       },
-      numero_licencia: {
-        type: Sequelize.STRING,
+      id_alimento: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'alimentos',
+            schema: 'public'
+          },
+          key: "id",
+        },
         allowNull: false
       },
-      especializacion: {
-        type: Sequelize.STRING,
+      cantidad_g: {
+        type: Sequelize.DECIMAL(5,2),
         allowNull: true
       },
-      anios_experiencia: {
-        type: Sequelize.INTEGER,
+      calorias_calculadas: {
+        type: Sequelize.DECIMAL(5,2),
         allowNull: true
       },
-      biografia: {
-        type: Sequelize.TEXT,
+      proteinas_calculadas: {
+        type: Sequelize.DECIMAL(5,2),
         allowNull: true
       },
-      numero_contacto: {
-        type: Sequelize.STRING,
+      carbohidratos_calculados: {
+        type: Sequelize.DECIMAL(5,2),
+        allowNull: true
+      },
+      grasas_calculadas: {
+        type: Sequelize.DECIMAL(5,2),
         allowNull: true
       },
       createdAt: {
@@ -56,6 +62,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('nutricionistas');
+    await queryInterface.dropTable('alimentos_registrados');
   }
 };

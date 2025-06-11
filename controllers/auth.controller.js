@@ -1,6 +1,5 @@
 const { Usuario } = require('../models');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 
 const generarToken = (usuario) => {
   return jwt.sign(
@@ -44,7 +43,7 @@ const login = async (req, res) => {
 
     const usuario = await Usuario.findOne({ where: { email } });
 
-    if (!usuario || !usuario.validarPassword(password)) {
+    if (!usuario || !(await usuario.validarPassword(password))) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 

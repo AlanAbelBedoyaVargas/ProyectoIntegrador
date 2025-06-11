@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'id_nutricionista',
         as: 'nutricionista_plan',
       });
+      Nutricionista.hasMany(models.Paciente, {
+        foreignKey: 'id_nutricionista',
+        as: 'nutricionista_paciente',
+      });
     }
   }
   Nutricionista.init({
@@ -31,10 +35,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull:false,
     },
-    especializacion: DataTypes.STRING,
-    anios_experiencia: DataTypes.INTEGER,
-    biografia: DataTypes.TEXT,
-    numero_contacto: DataTypes.STRING,
+    especializacion: {
+      type: DataTypes.STRING,
+      allowNull:true,
+    },
+    anios_experiencia: {
+      type: DataTypes.STRING,
+      allowNull:true,
+    },
+    biografia: {
+      type: DataTypes.TEXT,
+      allowNull:true,
+    },
+    numero_contacto: {
+      type: DataTypes.STRING,
+      allowNull:true,
+    },
   }, {
     sequelize,
     modelName: 'Nutricionista',

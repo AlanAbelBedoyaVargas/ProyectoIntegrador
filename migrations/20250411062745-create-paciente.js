@@ -25,8 +25,19 @@ module.exports = {
         },
         allowNull: false
       },
+      id_nutricionista: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'nutricionistas',
+            schema: 'public'
+          },
+          key: "id",
+        },
+        allowNull: false  // true Permite pacientes sin nutricionista asignado aún
+      },
       fechaNacimiento: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       sexo: {
@@ -45,19 +56,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      //Considerar tablas aparte
-      restricciones_alimentarias: {
-        type: Sequelize.STRING
-      },
-      //Estas si o si deben normalizarse
+      
       condicion_medica: {
-        type: Sequelize.STRING
-      },
-      alergias: {
-        type: Sequelize.STRING
-      },
-      intolerancias: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true, // Puede ser null si no hay condiciones médicas
       },
       id_actividad: {
         type: Sequelize.INTEGER,

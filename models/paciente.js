@@ -20,46 +20,82 @@ module.exports = (sequelize, DataTypes) => {
         as: 'paciente_actividad',
       });
       Paciente.hasMany(models.Plan, {
-        foreignKey: 'id_actividad',
+        foreignKey: 'id_paciente',
         as: 'paciente_plan',
       });
-     
+      Paciente.belongsTo(models.Nutricionista, {
+        foreignKey: 'id_nutricionista',
+        as: 'paciente_nutricionista',
+      });
+      Paciente.hasMany(models.Registro_comida, {
+        foreignKey: 'id_paciente',
+        as: 'paciente_registrocomida',
+      });
+
+      Paciente.hasMany(models.Metricas_paciente, {
+        foreignKey: 'id_paciente',
+        as: 'paciente_metricas',
+      });
+
+      // Relaciones con tablas pivote de alergias, restricciones e intolerancias
+      Paciente.belongsToMany(models.Alergia, {
+        through: 'paciente_alergias', 
+        foreignKey: 'id_paciente',    
+        as: 'alergias'                
+      });
+      Paciente.belongsToMany(models.Restricciones_alimentaria, {
+        through: 'paciente_restriccions', 
+        foreignKey: 'id_paciente',    
+        as: 'retriccions'                
+      });
+      Paciente.belongsToMany(models.Intolerancia, {
+        through: 'paciente_intolerancias', 
+        foreignKey: 'id_paciente',    
+        as: 'intolerancias'                
+      });
+      
     }
   }
   Paciente.init({
     uuid: DataTypes.UUID,
     id_usuario: {
       type: DataTypes.INTEGER,
-      allowNull:false,
+      allowNull: false,
+    },
+    id_nutricionista: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     fecha_nacimiento: {
-      type: DataTypes.DATE,
-      allowNull:false,
+      type: DataTypes.DATEONLY,
+      allowNull: false,
     },
     sexo: {
       type: DataTypes.ENUM('masculino', 'femenino'),
-      allowNull:false,
+      allowNull: false,
     },
     peso_kg: {
-      type: DataTypes.DECIMAL(5,2),
-      allowNull:false,
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
     },
     altura_cm: {
-      type: DataTypes.DECIMAL(5,2),
-      allowNull:false,
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
     },
     objetivo: {
       type: DataTypes.STRING,
-      allowNull:false,
+      allowNull: false,
     },
-    //Considerar tablas aparte
-    restricciones_alimentarias: DataTypes.STRING,
-    condicion_medica: DataTypes.STRING, 
-    alergias: DataTypes.STRING,
-    intolerancias: DataTypes.STRING,
+ 
+   
+    condicion_medica:{
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
     id_actividad: {
       type: DataTypes.INTEGER,
-      allowNull:false,
+      allowNull: false,
     }
 
   }, {

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Perfilpaciente extends Model {
+  class Paciente_restriccion extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,20 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+     
     }
   }
-  Perfilpaciente.init({
-    edad: DataTypes.INTEGER,
-    sexo: DataTypes.STRING,
-    peso_actual: DataTypes.FLOAT,
-    altura: DataTypes.FLOAT,
-    nivel_actividad: DataTypes.STRING,
-    objetivo: DataTypes.STRING
-
+  Paciente_restriccion.init({
+    uuid: DataTypes.UUID,
+    id_paciente: {
+      type:DataTypes.INTEGER,
+      allowNull: false,
+    },
+    id_restriccion: {
+      type:DataTypes.INTEGER,
+      allowNull: false,
+    },
   }, {
     sequelize,
-    modelName: 'Perfilpaciente',
-    tableName: 'perfil_pacientes',
+    modelName: 'Paciente_restriccion',
+    tableName: 'paciente_restriccions',
   });
-  return Perfilpaciente;
+  return Paciente_restriccion;
 };

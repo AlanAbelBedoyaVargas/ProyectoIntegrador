@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('niveles_actividads', {
+    await queryInterface.createTable('intolerancia', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,13 +10,14 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       uuid: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.literal('uuid_generate_v4()'),
+        type: Sequelize.UUID,        
+        defaultValue: Sequelize.literal( 'uuid_generate_v4()' ),     
         allowNull: false
       },
       nombre: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       descripcion: {
         type: Sequelize.STRING,
@@ -33,6 +34,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('niveles_actividads');
+    await queryInterface.dropTable('intolerancia');
   }
 };

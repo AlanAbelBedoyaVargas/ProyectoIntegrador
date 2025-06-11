@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('usuarios', {
+    await queryInterface.createTable('paciente_alergias', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,30 +14,27 @@ module.exports = {
         defaultValue: Sequelize.literal( 'uuid_generate_v4()' ),     
         allowNull: false
       },
-      nombre: {
-        type: Sequelize.STRING,
+      id_paciente: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'pacientes',
+            schema: 'public'
+          },
+          key: "id",
+        },
         allowNull: false
       },
-      apellido: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      username: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      rol: {
-        type: Sequelize.ENUM('paciente', 'nutricionista'),
+      
+      id_alergia: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'alergias',
+            schema: 'public'
+          },
+          key: "id",
+        },
         allowNull: false
       },
       createdAt: {
@@ -51,6 +48,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('usuarios');
+    await queryInterface.dropTable('paciente_alergias');
   }
 };

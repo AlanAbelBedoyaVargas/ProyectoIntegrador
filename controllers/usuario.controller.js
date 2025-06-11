@@ -5,9 +5,9 @@ const createUser = async (req, res) => {
   try {
     const { nombre, apellido, email, username, password, rol } = req.body; 
 
-    if (!nombre || !apellido || !email || !username || !password || !rol) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-    }
+    // if (!nombre || !apellido || !email || !password || !rol) {
+    //   return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+    // }
 
     const usuario = await Usuario.create({ nombre, apellido, email, username, password, rol });
     res.status(201).json(usuario);

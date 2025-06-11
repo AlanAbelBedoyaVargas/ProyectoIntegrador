@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Niveles_actividad extends Model {
+  class Restricciones_alimentaria extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,26 +11,28 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Niveles_actividad.hasMany(models.Paciente, {
-        foreignKey: 'id_actividad',
-        as: 'actividad_paciente',
+      Restricciones_alimentaria.belongsToMany(models.Paciente, {
+        through: 'paciente_restriccions',
+        foreignKey: 'id_restriccion',
+        as: 'pacientes'
       });
     }
   }
-  Niveles_actividad.init({
+  Restricciones_alimentaria.init({
     uuid: DataTypes.UUID,
     nombre: {
       type: DataTypes.STRING,
-      allowNull:false,
+      allowNull: false,
+      unique: true, //No hace falta, la base de datos ya lo maneja, además no es una validación activa
     },
     descripcion: {
       type: DataTypes.STRING,
-      allowNull:true,
+      allowNull: true,
     },
   }, {
     sequelize,
-    modelName: 'Niveles_actividad',
-    tableName: 'niveles_actividads',
+    modelName: 'Restricciones_alimentaria',
+    tableName: 'restricciones_alimentarias',
   });
-  return Niveles_actividad;
+  return Restricciones_alimentaria;
 };

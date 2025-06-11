@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('usuarios', {
+    await queryInterface.createTable('comidas_plans', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,31 +14,28 @@ module.exports = {
         defaultValue: Sequelize.literal( 'uuid_generate_v4()' ),     
         allowNull: false
       },
-      nombre: {
-        type: Sequelize.STRING,
+      id_plan: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'plans',
+            schema: 'public'
+          },
+          key: "id",
+        },
         allowNull: false
       },
-      apellido: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      email: {
-        type: Sequelize.STRING,
+      dia_semana: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true
+        validate: {
+          min: 0, // Domingo
+          max: 6  // Sábado
+        }
       },
-      username: {
-        type: Sequelize.STRING,
+      tipo_comida: {
+        type: Sequelize.ENUM('desayuno', 'almuerzo', 'cena', 'snack'),
         allowNull: false,
-        unique: true
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      rol: {
-        type: Sequelize.ENUM('paciente', 'nutricionista'),
-        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -51,6 +48,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('usuarios');
+    await queryInterface.dropTable('comidas_plans');
   }
 };

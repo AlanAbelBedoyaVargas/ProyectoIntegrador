@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('niveles_actividads', {
+    await queryInterface.createTable('alimentos', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,16 +10,30 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       uuid: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.literal('uuid_generate_v4()'),
-        allowNull: false
+        type: Sequelize.UUID
       },
       nombre: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      descripcion: {
+      categoria: {
         type: Sequelize.STRING,
+        allowNull: false
+      },
+      calorias_100g: {
+        type: Sequelize.DECIMAL(5,2),
+        allowNull: false
+      },
+      proteinas_g: {
+        type: Sequelize.DECIMAL(5,2),
+        allowNull: true
+      },
+      carbohidratos_g: {
+        type: Sequelize.DECIMAL(5,2),
+        allowNull: true
+      },
+      grasas_g: {
+        type: Sequelize.DECIMAL(5,2),
         allowNull: true
       },
       createdAt: {
@@ -33,6 +47,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('niveles_actividads');
+    await queryInterface.dropTable('alimentos');
   }
 };
