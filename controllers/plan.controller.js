@@ -1,82 +1,40 @@
-const { Plan } = require('../models');
+// 1. Importamos nuestro servicio. El controlador no sabe de modelos, solo de servicios.
+const planService = require('../services/plan.service');
 
-// Crear un nuevo plan de alimentación
-const createPlan = async (req, res) => {
+// Esta es la función que nuestra ruta llama.
+const createFullPlan = async (req, res) => {
   try {
-    const { fecha_inicio, fecha_fin, calorias_diarias, detalles } = req.body;
+    // 2. El controlador extrae los datos relevantes de la petición.
+    const planData = req.body;
+    
+    // Suponemos que tienes un middleware de autenticación que añade el usuario logueado al objeto req.
+    // Si no lo tienes aún, puedes enviar el id_nutricionista en el body por ahora.
+    const id_nutricionista = req.user.id; // Forma ideal
+    // const id_nutricionista = 1; // Forma temporal para probar
 
-    if (!fecha_inicio || !fecha_fin || !calorias_diarias || !detalles) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-    }
+    // 3. Llama al servicio para que haga todo el trabajo pesado.
+    // Le pasa los datos que necesita y espera la respuesta.
+    const nuevoPlanCompleto = await planService.createFullPlan(planData, id_nutricionista);
+    
+    // 4. Si el servicio termina con éxito, envía una respuesta positiva.
+    res.status(201).json({
+      success: true,
+      message: 'Plan de alimentación creado exitosamente.',
+      data: nuevoPlanCompleto
+    });
 
-    const plan = await Plan.create({ fecha_inicio, fecha_fin, calorias_diarias, detalles });
-    res.status(201).json(plan);
-  } catch (err) {
-    res.status(500).json({ error: 'No se pudo crear el plan de alimentación', details: err.message });
+  } catch (error) {
+    // 5. Si el servicio lanza un error (porque la transacción falló),
+    // el controlador lo atrapa aquí y envía una respuesta de error genérica.
+    res.status(500).json({ 
+      success: false,
+      message: 'Error al crear el plan de alimentación.', 
+      error: error.message // Enviamos el mensaje de error para debugging
+    });
   }
 };
 
-// Obtener todos los planes de alimentación
-const getPlans = async (req, res) => {
-  try {
-    const planes = await Plan.findAll();
-    res.json(planes);
-  } catch (err) {
-    res.status(500).json({ error: 'No se pudieron obtener los planes de alimentación', details: err.message });
-  }
+// Exportamos la función para que el archivo de rutas la pueda usar.
+module.exports = {
+  createFullPlan
 };
-
-// Obtener un plan de alimentación por ID
-const getPlanById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const plan = await Plan.findByPk(id);
-
-    if (!plan) {
-      return res.status(404).json({ error: 'Plan de alimentación no encontrado' });
-    }
-
-    res.json(plan);
-  } catch (err) {
-    res.status(500).json({ error: 'No se pudo obtener el plan de alimentación', details: err.message });
-  }
-};
-
-// Actualizar un plan de alimentación por ID
-const updatePlan = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { fecha_inicio, fecha_fin, calorias_diarias, detalles } = req.body;
-
-    const plan = await Plan.findByPk(id);
-
-    if (!plan) {
-      return res.status(404).json({ error: 'Plan de alimentación no encontrado' });
-    }
-
-    await plan.update({ fecha_inicio, fecha_fin, calorias_diarias, detalles });
-
-    res.json({ message: 'Plan de alimentación actualizado correctamente', plan });
-  } catch (err) {
-    res.status(500).json({ error: 'No se pudo actualizar el plan de alimentación', details: err.message });
-  }
-};
-
-// Eliminar un plan de alimentación por ID
-const deletePlan = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const plan = await Plan.findByPk(id);
-
-    if (!plan) {
-      return res.status(404).json({ error: 'Plan de alimentación no encontrado' });
-    }
-
-    await plan.destroy();
-    res.json({ message: 'Plan de alimentación eliminado correctamente' });
-  } catch (err) {
-    res.status(500).json({ error: 'No se pudo eliminar el plan de alimentación', details: err.message });
-  }
-};
-
-module.exports = { createPlan, getPlans, getPlanById, updatePlan, deletePlan };

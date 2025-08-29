@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('restricciones_alimentaria', {
+    await queryInterface.createTable('restricciones_alimentarias', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -34,6 +34,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('restricciones_alimentaria');
+    await queryInterface.dropTable('restricciones_alimentarias');
   }
 };

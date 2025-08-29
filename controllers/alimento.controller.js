@@ -1,128 +1,133 @@
-const { Nutricionista } = require('../models');
+// 1. Importamos el modelo con el que vamos a trabajar.
+const { Alimento } = require('../models');
 
-// Crear un nuevo nutricionista
-const createNutricionista = async (req, res) => {
+// --- FUNCIÓN PARA CREAR UN NUEVO ALIMENTO ---
+const createAlimento = async (req, res) => {
   try {
-    const {
-      id_usuario,
-      numero_licencia,
-      especializacion,
-      anios_experiencia,
-      biografia,
-      numero_contacto
-    } = req.body;
+    // 2. Extraemos los datos del cuerpo de la petición.
+    // El frontend nos enviará un JSON con la información del nuevo alimento.
+    const { nombre, categoria, calorias_100g, proteinas_g, carbohidratos_g, grasas_g } = req.body;
 
-    const nuevoNutricionista = await Nutricionista.create({
-      id_usuario,
-      numero_licencia,
-      especializacion,
-      anios_experiencia,
-      biografia,
-      numero_contacto
-    });
-
-    res.status(201).json(nuevoNutricionista);
-  } catch (err) {
-    res.status(500).json({
-      error: 'No se pudo crear el nutricionista',
-      details: err.message
-    });
-  }
-};
-
-// Obtener todos los nutricionistas
-const getNutricionistas = async (req, res) => {
-  try {
-    const nutricionistas = await Nutricionista.findAll();
-    res.json(nutricionistas);
-  } catch (err) {
-    res.status(500).json({
-      error: 'No se pudieron obtener los nutricionistas',
-      details: err.message
-    });
-  }
-};
-
-// Obtener un nutricionista por ID
-const getNutricionistaById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const nutricionista = await Nutricionista.findByPk(id);
-
-    if (!nutricionista) {
-      return res.status(404).json({ error: 'Nutricionista no encontrado' });
+    // 3. Validación básica de entrada.
+    if (!nombre || !categoria || calorias_100g === undefined) {
+      return res.status(400).json({ error: 'Los campos nombre, categoria y calorias_100g son obligatorios.' });
     }
 
-    res.json(nutricionista);
-  } catch (err) {
-    res.status(500).json({
-      error: 'No se pudo obtener el nutricionista',
-      details: err.message
+    // 4. Usamos el método `create` de Sequelize para insertar el nuevo registro.
+    const nuevoAlimento = await Alimento.create({
+      nombre,
+      categoria,
+      calorias_100g,
+      proteinas_g,
+      carbohidratos_g,
+      grasas_g
     });
+
+    // 5. Devolvemos una respuesta de éxito (201 Created) con el objeto del alimento recién creado.
+    res.status(201).json(nuevoAlimento);
+
+  } catch (error) {
+    // 6. Si algo falla (ej. un error de la base de datos), devolvemos un error 500.
+    res.status(500).json({ error: 'No se pudo crear el alimento.', details: error.message });
   }
 };
 
-// Actualizar un nutricionista
-const updateNutricionista = async (req, res) => {
+
+// --- FUNCIÓN PARA OBTENER TODOS LOS ALIMENTOS ---
+const getAllAlimentos = async (req, res) => {
   try {
+    // 7. Usamos el método `findAll` para obtener todos los registros de la tabla 'alimentos'.
+    const alimentos = await Alimento.findAll();
+    
+    // 8. Devolvemos la lista de alimentos en formato JSON.
+    res.status(200).json(alimentos);
+
+  } catch (error) {
+    res.status(500).json({ error: 'No se pudieron obtener los alimentos.', details: error.message });
+  }
+};
+
+
+// --- FUNCIÓN PARA OBTENER UN ALIMENTO POR SU ID ---
+const getAlimentoById = async (req, res) => {
+  try {
+    // 9. Obtenemos el ID de los parámetros de la ruta (ej. /api/alimentos/123).
     const { id } = req.params;
-    const {
-      id_usuario,
-      numero_licencia,
-      especializacion,
-      anios_experiencia,
-      biografia,
-      numero_contacto
-    } = req.body;
 
-    const nutricionista = await Nutricionista.findByPk(id);
+    // 10. Usamos `findByPk` (Find By Primary Key) para buscar un alimento por su ID.
+    const alimento = await Alimento.findByPk(id);
 
-    if (!nutricionista) {
-      return res.status(404).json({ error: 'Nutricionista no encontrado' });
+    // 11. Si no se encuentra el alimento, devolvemos un error 404 (Not Found).
+    if (!alimento) {
+      return res.status(404).json({ error: 'Alimento no encontrado.' });
     }
 
-    await nutricionista.update({
-      id_usuario,
-      numero_licencia,
-      especializacion,
-      anios_experiencia,
-      biografia,
-      numero_contacto
-    });
+    // 12. Si se encuentra, lo devolvemos.
+    res.status(200).json(alimento);
 
-    res.json(nutricionista);
-  } catch (err) {
-    res.status(500).json({
-      error: 'No se pudo actualizar el nutricionista',
-      details: err.message
-    });
+  } catch (error) {
+    res.status(500).json({ error: 'No se pudo obtener el alimento.', details: error.message });
   }
 };
 
-// Eliminar un nutricionista
-const deleteNutricionista = async (req, res) => {
+
+// --- FUNCIÓN PARA ACTUALIZAR UN ALIMENTO ---
+const updateAlimento = async (req, res) => {
   try {
     const { id } = req.params;
-    const nutricionista = await Nutricionista.findByPk(id);
+    const dataToUpdate = req.body;
 
-    if (!nutricionista) {
-      return res.status(404).json({ error: 'Nutricionista no encontrado' });
+    // 13. Buscamos el alimento para asegurarnos de que existe.
+    const alimento = await Alimento.findByPk(id);
+    if (!alimento) {
+      return res.status(404).json({ error: 'Alimento no encontrado para actualizar.' });
     }
 
-    await nutricionista.destroy();
-    res.json({ message: 'Nutricionista eliminado correctamente' });
-  } catch (err) {
-    res.status(500).json({
-      error: 'No se pudo eliminar el nutricionista',
-      details: err.message
-    });
+    // 14. Usamos el método `update` del objeto encontrado para aplicar los cambios.
+    await alimento.update(dataToUpdate);
+
+    // 15. Devolvemos un mensaje de éxito y el objeto del alimento ya actualizado.
+    res.status(200).json({ message: 'Alimento actualizado correctamente.', alimento });
+
+  } catch (error) {
+    res.status(500).json({ error: 'No se pudo actualizar el alimento.', details: error.message });
   }
 };
 
+
+// --- FUNCIÓN PARA ELIMINAR UN ALIMENTO ---
+const deleteAlimento = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const alimento = await Alimento.findByPk(id);
+    if (!alimento) {
+      return res.status(404).json({ error: 'Alimento no encontrado para eliminar.' });
+    }
+
+    // 16. Usamos el método `destroy` para eliminar el registro de la base de datos.
+    await alimento.destroy();
+
+    // 17. Devolvemos una respuesta de éxito. Usamos el código 204 (No Content) que es
+    // común para operaciones de borrado exitosas que no devuelven contenido.
+    res.status(204).send();
+
+  } catch (error) {
+    // Aquí podrías tener un error si el alimento está siendo usado en un plan (foreign key constraint).
+    // Sequelize lanzará un error que podemos capturar.
+    if (error.name === 'SequelizeForeignKeyConstraintError') {
+      return res.status(409).json({ error: 'No se puede eliminar el alimento porque está siendo utilizado en uno o más planes de alimentación.' });
+    }
+    res.status(500).json({ error: 'No se pudo eliminar el alimento.', details: error.message });
+  }
+};
+
+
+// 18. Exportamos todas las funciones para que puedan ser usadas en el archivo de rutas.
 module.exports = {
-  createNutricionista,
-  getNutricionistas,
-  getNutricionistaById,
-  updateNutricionista,
-  deleteNutricionista
+  createAlimento,
+  getAllAlimentos,
+  getAlimentoById,
+  updateAlimento,
+  deleteAlimento
 };

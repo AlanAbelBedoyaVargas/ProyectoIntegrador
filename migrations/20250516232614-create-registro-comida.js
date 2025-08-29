@@ -27,7 +27,7 @@ module.exports = {
       },
       
       tipo_comida: {
-        type: DataTypes.ENUM('desayuno', 'almuerzo', 'cena', 'snack'),
+        type: Sequelize.ENUM('desayuno', 'almuerzo', 'cena', 'snack'),
         allowNull: false,
       },
       fecha: {
