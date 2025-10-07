@@ -1,17 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const {
-  createNutricionista,
-  getNutricionistas,
-  getNutricionistaById,
-  updateNutricionista,
-  deleteNutricionista
-} = require('../controllers/nutricionista.controller');
+// Cargar el middleware de autenticación
+const { verificarToken } = require('../middlewares/authMiddleware');
+const {authorizeRole} = require('../middlewares/authorizeRole');
+const { getProfileNutricionist, updateNutricionist} = require('../controllers/nutricionista.controller');
+const {validateUpdate } = require('../middlewares/validators/nutricionista');
 
-router.post('/', createNutricionista);
-router.get('/', getNutricionistas);
-router.get('/:id', getNutricionistaById);
-router.put('/:id', updateNutricionista);
-router.delete('/:id', deleteNutricionista);
+router.get('/perfil', verificarToken, authorizeRole(['nutricionista']), getProfileNutricionist);
+router.put('/update', verificarToken, authorizeRole(['nutricionista']), validateUpdate, updateNutricionist);
 
-module.exports = router;
+module.exports = router;  

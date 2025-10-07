@@ -34,27 +34,27 @@ module.exports = {
           },
           key: "id",
         },
-        allowNull: false  // true Permite pacientes sin nutricionista asignado aún
+        allowNull: true  // true Permite pacientes sin nutricionista asignado aún
       },
       fechaNacimiento: {
         type: Sequelize.DATEONLY,
-        allowNull: false,
+        allowNull: true,
       },
       sexo: {
         type: Sequelize.ENUM('masculino', 'femenino'),
-        allowNull: false
+        allowNull: true
       },
       peso_kg: {
         type: Sequelize.DECIMAL(5, 2),
-        allowNull: false,
+        allowNull: true,
       },
       altura_cm: {
         type: Sequelize.DECIMAL(5, 2),
-        allowNull: false,
+        allowNull: true,
       },
       objetivo: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       
       condicion_medica: {
@@ -70,7 +70,7 @@ module.exports = {
           },
           key: "id",
         },
-        allowNull: false
+        allowNull: true
       },
       createdAt: {
         allowNull: false,

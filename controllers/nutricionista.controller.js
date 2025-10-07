@@ -1,96 +1,12 @@
 const { Nutricionista } = require('../models');
+const { update, getById } = require('../services/nutricionista.service');
 
-// Crear un nuevo nutricionista
-const createNutricionista = async (req, res) => {
+// Actualizar un nutricionista en base al usuario autenticado
+const updateNutricionist = async (req, res) => {
   try {
-    const {
-      id_usuario,
-      numero_licencia,
-      especializacion,
-      anios_experiencia,
-      biografia,
-      numero_contacto
-    } = req.body;
-
-    const nuevoNutricionista = await Nutricionista.create({
-      id_usuario,
-      numero_licencia,
-      especializacion,
-      anios_experiencia,
-      biografia,
-      numero_contacto
-    });
-
-    res.status(201).json(nuevoNutricionista);
-  } catch (err) {
-    res.status(500).json({
-      error: 'No se pudo crear el nutricionista',
-      details: err.message
-    });
-  }
-};
-
-// Obtener todos los nutricionistas
-const getNutricionistas = async (req, res) => {
-  try {
-    const nutricionistas = await Nutricionista.findAll();
-    res.json(nutricionistas);
-  } catch (err) {
-    res.status(500).json({
-      error: 'No se pudieron obtener los nutricionistas',
-      details: err.message
-    });
-  }
-};
-
-// Obtener un nutricionista por ID
-const getNutricionistaById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const nutricionista = await Nutricionista.findByPk(id);
-
-    if (!nutricionista) {
-      return res.status(404).json({ error: 'Nutricionista no encontrado' });
-    }
-
-    res.json(nutricionista);
-  } catch (err) {
-    res.status(500).json({
-      error: 'No se pudo obtener el nutricionista',
-      details: err.message
-    });
-  }
-};
-
-// Actualizar un nutricionista
-const updateNutricionista = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const {
-      id_usuario,
-      numero_licencia,
-      especializacion,
-      anios_experiencia,
-      biografia,
-      numero_contacto
-    } = req.body;
-
-    const nutricionista = await Nutricionista.findByPk(id);
-
-    if (!nutricionista) {
-      return res.status(404).json({ error: 'Nutricionista no encontrado' });
-    }
-
-    await nutricionista.update({
-      id_usuario,
-      numero_licencia,
-      especializacion,
-      anios_experiencia,
-      biografia,
-      numero_contacto
-    });
-
-    res.json(nutricionista);
+    const usuarioId = req.usuario.id; // viene del token
+    const nutricionistaActualizado = await update(usuarioId, req.body);
+    res.json({ nutricionista: nutricionistaActualizado });
   } catch (err) {
     res.status(500).json({
       error: 'No se pudo actualizar el nutricionista',
@@ -99,30 +15,55 @@ const updateNutricionista = async (req, res) => {
   }
 };
 
-// Eliminar un nutricionista
-const deleteNutricionista = async (req, res) => {
+// Obtener un nutricionista por ID de usuario (perfil del nutricionista autenticado)
+const getProfileNutricionist = async (req, res) => {
   try {
-    const { id } = req.params;
-    const nutricionista = await Nutricionista.findByPk(id);
+    const usuarioId = req.usuario.id; // viene del JWT
+    const perfilNutricionista = await getById(usuarioId);
+    res.json({ nutricionista: perfilNutricionista });
 
-    if (!nutricionista) {
-      return res.status(404).json({ error: 'Nutricionista no encontrado' });
-    }
-
-    await nutricionista.destroy();
-    res.json({ message: 'Nutricionista eliminado correctamente' });
   } catch (err) {
     res.status(500).json({
-      error: 'No se pudo eliminar el nutricionista',
+      error: 'No se pudo obtener el nutricionista',
       details: err.message
     });
   }
 };
 
+// Obtener todos los nutricionistas (solo tabla nutricionistas)
+// const getNutricionists = async (req, res) => {
+//   try {
+//     const nutricionistas = await Nutricionista.findAll();
+//     res.json(nutricionistas);
+//   } catch (err) {
+//     res.status(500).json({
+//       error: 'No se pudieron obtener los nutricionistas',
+//       details: err.message
+//     });
+//   }
+// };
+
+
+
+// Eliminar un nutricionista por ID de nutricionista (solo de la tabla nutricionistas)
+// const deleteNutricionist = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const nutricionista = await Nutricionista.findByPk(id);
+
+//     await nutricionista.destroy();
+//     res.json({ message: 'Nutricionista eliminado correctamente' });
+//   } catch (err) {
+//     res.status(500).json({
+//       error: 'No se pudo eliminar el nutricionista',
+//       details: err.message
+//     });
+//   }
+// };
+
 module.exports = {
-  createNutricionista,
-  getNutricionistas,
-  getNutricionistaById,
-  updateNutricionista,
-  deleteNutricionista
+  updateNutricionist,
+  getProfileNutricionist
+  // getNutricionists,
+  // deleteNutricionist
 };

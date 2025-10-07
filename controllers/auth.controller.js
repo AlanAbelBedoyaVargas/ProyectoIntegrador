@@ -1,10 +1,21 @@
 const { Usuario } = require('../models');
+const { registerUsuario } = require('../services/auth.service');
 const jwt = require('jsonwebtoken');
 
-const generarToken = (usuario) => {
+const generarToken = (usuario, nutricionista) => {
+
+  const payload = {
+    id: usuario.id,
+    username: usuario.username,
+    rol: usuario.rol,
+  };
+  //Solo incluir el id_nutricionista si existe
+  if (nutricionista) {
+    payload.nutricionistaId = nutricionista.id;
+  }
   return jwt.sign(
-    { id: usuario.id, username: usuario.username, rol: usuario.rol },
-    process.env.JWT_SECRET || 'secreto', // Usa una variable de entorno para mayor seguridad
+    payload,
+    process.env.JWT_SECRET || 'secreto', // Usar una variable de entorno para mayor seguridad
     { expiresIn: '1h' }
   );
 };
@@ -12,21 +23,10 @@ const generarToken = (usuario) => {
 // Registro de usuario
 const register = async (req, res) => {
   try {
-    const { nombre, apellido, email, username, password, rol } = req.body;
+    const { usuario, nutricionista } = await registerUsuario(req.body); // Service para registrar usuarios dependiendo del rol
+    const token = generarToken(usuario, nutricionista);
 
-    if (!nombre || !apellido || !email || !username || !password || !rol) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-    }
-
-    const usuarioExistente = await Usuario.findOne({ where: { email } });
-    if (usuarioExistente) {
-      return res.status(400).json({ error: 'El correo ya está registrado' });
-    }
-
-    const usuario = await Usuario.create({ nombre, apellido, email, username, password, rol });
-    const token = generarToken(usuario);
-
-    res.status(201).json({ usuario, token });
+    res.status(201).json({ usuario, nutricionista, token });
   } catch (error) {
     res.status(500).json({ error: 'Error al registrar usuario', details: error.message });
   }
@@ -37,18 +37,19 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email y contraseña son requeridos' });
-    }
-
     const usuario = await Usuario.findOne({ where: { email } });
 
     if (!usuario || !(await usuario.validarPassword(password))) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    const token = generarToken(usuario);
-    res.json({ usuario, token });
+    let nutricionista = null;
+    if (usuario.rol === 'nutricionista') {
+      nutricionista = await usuario.getUsuario_nutricionista();
+    }
+
+    const token = generarToken(usuario, nutricionista);
+    res.json({ usuario, nutricionista, token });
   } catch (error) {
     res.status(500).json({ error: 'Error al iniciar sesión', details: error.message });
   }

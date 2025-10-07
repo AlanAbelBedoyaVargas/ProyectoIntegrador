@@ -26,7 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Nutricionista.init({
-    uuid: DataTypes.UUID,
+    uuid: {
+      type: DataTypes.UUID,
+      //allowNull:false, No hace falta, la base de datos crea el uuid, no se manda desde el front
+    },
     id_usuario: {
       type: DataTypes.INTEGER,
       allowNull:false,

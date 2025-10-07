@@ -64,30 +64,28 @@ module.exports = (sequelize, DataTypes) => {
     },
     id_nutricionista: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
-    fecha_nacimiento: {
+    fechaNacimiento: {
       type: DataTypes.DATEONLY,
-      allowNull: false,
+      allowNull: true,
     },
     sexo: {
       type: DataTypes.ENUM('masculino', 'femenino'),
-      allowNull: false,
+      allowNull: true,
     },
     peso_kg: {
       type: DataTypes.DECIMAL(5, 2),
-      allowNull: false,
+      allowNull: true,
     },
     altura_cm: {
       type: DataTypes.DECIMAL(5, 2),
-      allowNull: false,
+      allowNull: true,
     },
     objetivo: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
- 
-   
+      allowNull: true,
+    },  
     condicion_medica:{
       type: DataTypes.STRING,
       allowNull: true,
@@ -95,7 +93,7 @@ module.exports = (sequelize, DataTypes) => {
 
     id_actividad: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     }
 
   }, {
